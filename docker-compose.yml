@@ -25,6 +25,9 @@ services:
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
       - KC_HOSTNAME=${KEYCLOAK_HOSTNAME}
+      - KC_HOSTNAME_PORT=${KEYCLOAK_HOSTNAME_PORT}
+      - KC_HOSTNAME_STRICT_BACKCHANEL=true
+      - KC_HOSTNAME_STRICT_HTTPS=false
     ports:
       - "8087:8080"
     depends_on:
