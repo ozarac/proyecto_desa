@@ -24,6 +24,7 @@ services:
       - DB_DATABASE=${KEYCLOAK_DB}
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - KC_HOSTNAME=${KEYCLOAK_HOSTNAME}
     ports:
       - "8087:8080"
     depends_on:
