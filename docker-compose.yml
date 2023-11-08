@@ -1,22 +1,37 @@
 version: '3'
 
 services:
+  db_app:
+    image: postgres
+    environment:
+      - POSTGRES_DB=${PROCESAMIENTO_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgress_data_app:/var/lib/postgresql/data
+    ports:
+      - "54320:5432"
+    networks:
+      - desa-network
+  #Servicio de Kyecloak
   keycloak:
     image: jboss/keycloak
     environment:
       - KEYCLOAK_USER=${KEYCLOAK_USER}
       - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
       - DB_VENDOR=POSTGRES
-      - DB_ADDR=postgres
-      - DB_DATABASE=keycloak
+      - DB_ADDR=db_keycloak
+      - DB_DATABASE=${KEYCLOAK_DB}
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
-
-  postgres:
+      - db_keycloak
+    networks:
+      - desa-network
+  #Base de datos de Keycloak
+  db_keycloak:
     image: postgres
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
@@ -24,8 +39,12 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgress_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    networks:
+      - desa-network
+
+networks:
+  desa-network:
 
 volumes:
   postgress_data:
+  postgress_data_app:
