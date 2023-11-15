@@ -1,6 +1,28 @@
 version: '3'
 
 services:
+  #Servicio de la aplicacion
+  app:
+    image: ozarac/procesamiento_materiales:latest
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - KEYCLOAK_REALM=${KEYCLOAK_REALM}
+      - KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}
+      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
+      - KEYCLOAK_HOSTNAME=${KEYCLOAK_HOSTNAME}
+      - SESSION_SECRET=${SESSION_SECRET}
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db_app
+    networks:
+      - desa-network
+
   db_app:
     image: postgres
     environment:
