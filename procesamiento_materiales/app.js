@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const { keycloak } = require('./keycloak-config');
+const db = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -51,7 +52,7 @@ app.get('/protected', keycloak.protect(), (req, res) => {
     `);
 });
 
-app.get('/materiales', keycloak.protect(), (req, res) => {
+app.get('/materiales', protectWithRole('user'), (req, res) => {
     res.sendFile('materiales.html', { root: __dirname + '/public' });
 });
 
@@ -61,7 +62,8 @@ app.get('/api/materiales', protectWithRole('user'), async (req, res) => {
         const result = await db.query('SELECT * FROM Materiales');
         res.json(result.rows);
     } catch (error) {
-        res.status(500).send(error);
+        console.error('Error en la consulta de la base de datos:', error);
+        res.status(500).send('Error en el servidor');
     }
 });
 

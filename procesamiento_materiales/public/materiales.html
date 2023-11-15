@@ -7,11 +7,11 @@
 </head>
 <body>
     <h1>Gestión de Materiales</h1>
-    <form action="/api/materiales" method="post">
-        <input type="text" id="nombre" placeholder="Nombre del material">
-        <input type="text" id="descripcion" placeholder="Descripción">
-        <input type="number" id="cantidad" placeholder="Cantidad en inventario">
-        <input type="number" id="precio" placeholder="Precio">
+    <form id="formMaterial">
+        <input type="text" name="nombre" id="nombre" placeholder="Nombre del material">
+        <input type="text" name="descripcion" id="descripcion" placeholder="Descripción">
+        <input type="number" name="cantidadInventario" id="cantidad" placeholder="Cantidad en inventario">
+        <input type="number" name="precio" id="precio" placeholder="Precio" step="0.01">
         <button type="submit">Agregar Material</button>
     </form>
     <div id="listaMateriales">
