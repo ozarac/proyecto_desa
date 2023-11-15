@@ -19,8 +19,10 @@ app.use(session({
 }));
 
 // Configuración de Keycloak
-const keycloak = new Keycloak({ store: memoryStore });
-app.use(keycloak.middleware());
+app.use(keycloak.middleware({
+    logout: '/logout',
+    admin: '/',
+  }));
 
 const protectWithRole = (role) => {
     return keycloak.protect((token) => token.hasRole(role));
@@ -40,16 +42,38 @@ app.get('/login', (req, res) => {
 
 // Ruta protegida que requerirá autenticación de Keycloak
 app.get('/protected', keycloak.protect(), (req, res) => {
-    res.send("Esta ruta está protegida y has sido autenticado.");
+    res.send(`
+        <h1>Bienvenido</h1>
+        <ul>
+            <li><a href="/materiales">Gestionar Materiales</a></li>
+            <!-- Agregar más enlaces según sea necesario -->
+        </ul>
+    `);
 });
 
-// Rutas para la API de productos
-app.get('/productos', protectWithRole('user'), (req, res) => {
-    // Implementa lógica para listar productos
+app.get('/materiales', keycloak.protect(), (req, res) => {
+    res.sendFile('materiales.html', { root: __dirname + '/public' });
 });
 
-app.post('/productos', protectWithRole('admin'), (req, res) => {
-    // Implementa lógica para añadir un nuevo producto
+// Obtener todos los materiales
+app.get('/api/materiales', protectWithRole('user'), async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM Materiales');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+// Agregar un nuevo material
+app.post('/api/materiales', protectWithRole('administrator'), async (req, res) => {
+    const { nombre, descripcion, cantidadInventario, precio } = req.body;
+    try {
+        const result = await db.query('INSERT INTO Materiales (Nombre, Descripcion, CantidadInventario, Precio) VALUES ($1, $2, $3, $4) RETURNING *', [nombre, descripcion, cantidadInventario, precio]);
+        res.json(result.rows[0]);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 });
 
 app.listen(PORT, () => {

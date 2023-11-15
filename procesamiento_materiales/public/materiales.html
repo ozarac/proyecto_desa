@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Materiales</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Gestión de Materiales</h1>
+    <form action="/api/materiales" method="post">
+        <input type="text" id="nombre" placeholder="Nombre del material">
+        <input type="text" id="descripcion" placeholder="Descripción">
+        <input type="number" id="cantidad" placeholder="Cantidad en inventario">
+        <input type="number" id="precio" placeholder="Precio">
+        <button type="submit">Agregar Material</button>
+    </form>
+    <div id="listaMateriales">
+        <!-- La lista de materiales se cargará aquí -->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
